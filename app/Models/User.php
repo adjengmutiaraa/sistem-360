@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -24,9 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
-        'jabatan_id',
-        'unit_id',
+        'department_id',
+        'position_id',
         'atasan_id',
         'foto',
         'telepon',
@@ -57,14 +57,14 @@ class User extends Authenticatable
 
     // --- RELATIONSHIPS ---
 
-    public function jabatan(): BelongsTo
+    public function position(): BelongsTo
     {
-        return $this->belongsTo(Jabatan::class, 'jabatan_id');
+        return $this->belongsTo(Position::class, 'position_id');
     }
 
-    public function unit(): BelongsTo
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(Unit::class, 'unit_id');
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     public function atasan(): BelongsTo
@@ -95,22 +95,5 @@ class User extends Authenticatable
     public function penugasanSebagaiDinilai(): HasMany
     {
         return $this->hasMany(PenugasanPenilaian::class, 'dinilai_id');
-    }
-
-    // --- HELPER METHODS ---
-
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isPegawai(): bool
-    {
-        return $this->role === 'pegawai';
-    }
-
-    public function getJabatanLevelAttribute(): ?string
-    {
-        return $this->jabatan?->level;
     }
 }

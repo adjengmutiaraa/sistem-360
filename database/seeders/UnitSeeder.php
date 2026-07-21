@@ -22,7 +22,7 @@ class UnitSeeder extends Seeder
             ],
             [
                 'id' => 3,
-                'nama_unit' => 'Bidang Kepegawaian & SDM',
+                'nama_unit' => 'Bidang PPIK',
                 'kode_unit' => 'KEPEGAWAIAN',
             ],
             [

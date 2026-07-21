@@ -14,8 +14,9 @@ class PegawaiMiddleware
             return redirect()->route('login');
         }
 
-        if ($request->user()->role !== 'pegawai') {
-            return redirect()->route('admin.dashboard')->with('error', 'Akses ditolak. Anda adalah Admin.');
+        if ($request->user()->hasAnyRole(['Super Admin', 'Admin BKPSDM']) && ! $request->user()->hasRole('Pegawai')) {
+            // Technically super admin shouldn't be here unless they also have a pegawai role, but for now redirect
+            return redirect()->route('admin.dashboard');
         }
 
         return $next($request);

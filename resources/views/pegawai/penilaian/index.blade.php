@@ -67,7 +67,7 @@
                     <tr>
                         <th style="width: 40px;">No</th>
                         <th>Pegawai Target</th>
-                        <th>Jabatan & Unit Kerja</th>
+                        <th>position & department Kerja</th>
                         <th>Jenis Hubungan</th>
                         <th>Status Pengisian</th>
                         <th style="width: 160px;" class="text-center">Aksi</th>
@@ -82,8 +82,8 @@
                                 <small class="text-secondary">NIP: {{ $tugas->dinilai->nip }}</small>
                             </td>
                             <td>
-                                <div>{{ $tugas->dinilai->jabatan?->nama_jabatan ?? '-' }}</div>
-                                <small class="text-secondary">{{ $tugas->dinilai->unit?->nama_unit ?? '-' }}</small>
+                                <div>{{ $tugas->dinilai->position?->nama_jabatan ?? '-' }}</div>
+                                <small class="text-secondary">{{ $tugas->dinilai->department?->nama_unit ?? '-' }}</small>
                             </td>
                             <td>
                                 @if($tugas->jenis_penilai === 'atasan')
@@ -122,3 +122,4 @@
     </div>
 @endif
 @endsection
+

@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'pegawai'])->default('pegawai');
-            $table->foreignId('jabatan_id')->nullable()->constrained('jabatans')->nullOnDelete();
-            $table->foreignId('unit_id')->nullable()->constrained('units')->nullOnDelete();
+            $table->unsignedBigInteger('department_id')->nullable();
+            $table->unsignedBigInteger('position_id')->nullable();
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('set null');
+            $table->foreign('position_id')->references('id')->on('positions')->onDelete('set null');
             $table->foreignId('atasan_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('foto')->nullable();
             $table->string('telepon')->nullable();

@@ -16,7 +16,7 @@
     </div>
     <div>
         <span class="badge bg-info text-dark px-3 py-2 rounded-pill">
-            <i class="bi bi-person-badge me-1"></i> {{ auth()->user()->jabatan?->nama_jabatan ?? 'Pegawai ASN' }}
+            <i class="bi bi-person-badge me-1"></i> {{ auth()->user()->position?->nama_jabatan ?? 'Pegawai ASN' }}
         </span>
     </div>
 </div>
@@ -49,13 +49,13 @@
                 <h5 class="fw-bold mb-0">{{ $user->name }}</h5>
                 <p class="text-secondary small mb-2">NIP: {{ $user->nip }}</p>
                 <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill">
-                    {{ $user->jabatan?->nama_jabatan ?? 'Belum ada jabatan' }}
+                    {{ $user->position?->nama_jabatan ?? 'Belum ada position' }}
                 </span>
             </div>
             <div class="border-top pt-3">
                 <div class="d-flex justify-content-between mb-2">
-                    <small class="text-secondary">Unit Kerja:</small>
-                    <small class="fw-semibold">{{ $user->unit?->nama_unit ?? '-' }}</small>
+                    <small class="text-secondary">department Kerja:</small>
+                    <small class="fw-semibold">{{ $user->department?->nama_unit ?? '-' }}</small>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <small class="text-secondary">Atasan Langsung:</small>
@@ -121,7 +121,7 @@
                 <thead class="table-light">
                     <tr>
                         <th>Pegawai Target</th>
-                        <th>Jabatan & Unit</th>
+                        <th>position & department</th>
                         <th>Jenis Hubungan</th>
                         <th>Status</th>
                         <th class="text-center">Aksi</th>
@@ -131,7 +131,7 @@
                     @foreach($penugasan as $tugas)
                         <tr>
                             <td class="fw-bold text-dark">{{ $tugas->dinilai->name }}</td>
-                            <td>{{ $tugas->dinilai->jabatan?->nama_jabatan }} ({{ $tugas->dinilai->unit?->nama_unit ?? '-' }})</td>
+                            <td>{{ $tugas->dinilai->position?->nama_jabatan }} ({{ $tugas->dinilai->department?->nama_unit ?? '-' }})</td>
                             <td>
                                 @if($tugas->jenis_penilai === 'atasan')
                                     <span class="badge bg-primary px-3 py-1 rounded-pill">Atasan Langsung</span>
@@ -165,3 +165,4 @@
     </div>
 @endif
 @endsection
+

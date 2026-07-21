@@ -35,7 +35,7 @@
             <h5 class="fw-bold mb-0">{{ $user->name }}</h5>
             <p class="text-secondary small mb-2">NIP: {{ $user->nip }}</p>
             <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill">
-                {{ $user->jabatan?->nama_jabatan }} - {{ $user->unit?->nama_unit }}
+                {{ $user->Position?->name }} - {{ $user->Department?->name }}
             </span>
         </div>
     </div>
@@ -84,3 +84,4 @@
     @endforelse
 </div>
 @endsection
+

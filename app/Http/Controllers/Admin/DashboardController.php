@@ -6,26 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Models\HasilAkhir;
 use App\Models\PeriodePenilaian;
 use App\Models\User;
+use App\Models\Department;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $totalPegawai = User::where('role', 'pegawai')->count();
-        $totalStaff = User::whereHas('jabatan', fn ($q) => $q->where('level', 'staff'))->count();
-        $totalKabid = User::whereHas('jabatan', fn ($q) => $q->where('level', 'kabid'))->count();
-        $totalKetua = User::whereHas('jabatan', fn ($q) => $q->where('level', 'ketua_umum'))->count();
+        $totalPegawai = User::whereDoesntHave('roles', function($q) {
+            $q->whereIn('name', ['Super Admin', 'Admin BKPSDM']);
+        })->count();
+        
+        $totalStaff = User::whereHas('position', fn ($q) => $q->where('level', '>=', 4))->count();
+        $totalKabid = User::whereHas('position', fn ($q) => $q->where('level', 3))->count();
+        $totalKetua = User::whereHas('position', fn ($q) => $q->where('level', 1))->count();
 
         $periodeAktif = PeriodePenilaian::getPeriodeAktif();
 
         $top5Hasils = collect();
         if ($periodeAktif) {
-            $top5Hasils = HasilAkhir::with(['user.jabatan', 'user.unit'])
+            $top5Hasils = HasilAkhir::with(['user.position', 'user.department'])
                 ->where('periode_penilaian_id', $periodeAktif->id)
                 ->orderBy('nilai_akhir', 'desc')
                 ->take(5)
                 ->get();
         }
+
+        // Get organizational structure (Root department which is level 1)
+        $orgStructure = Department::whereNull('parent_id')->with('children.children')->get();
 
         return view('admin.dashboard', compact(
             'totalPegawai',
@@ -33,7 +40,8 @@ class DashboardController extends Controller
             'totalKabid',
             'totalKetua',
             'periodeAktif',
-            'top5Hasils'
+            'top5Hasils',
+            'orgStructure'
         ));
     }
 }

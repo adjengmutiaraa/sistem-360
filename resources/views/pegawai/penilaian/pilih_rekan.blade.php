@@ -43,7 +43,7 @@
                                 <option value="{{ $staff->id }}" 
                                         {{ $isSelected ? 'selected' : '' }}
                                         {{ $staff->is_full && ! $isSelected ? 'disabled' : '' }}>
-                                    {{ $staff->name }} ({{ $staff->unit?->nama_unit ?? 'Staff' }})
+                                    {{ $staff->name }} ({{ $staff->department?->nama_unit ?? 'Staff' }})
                                     @if($staff->is_full && ! $isSelected)
                                         [PENUH - Max 3 Evaluator]
                                     @endif
@@ -63,3 +63,4 @@
     </form>
 </div>
 @endsection
+

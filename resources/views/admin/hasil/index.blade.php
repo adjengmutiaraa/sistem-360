@@ -47,25 +47,25 @@
             <input type="text" name="search" class="form-control js-auto-search" placeholder="Ketik Nama atau NIP..." value="{{ request('search') }}" autocomplete="off">
         </div>
         <div class="col-12 col-md-2">
-            <label class="form-label small fw-semibold text-secondary mb-1">UNIT KERJA</label>
-            <select name="unit_id" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Unit --</option>
-                @foreach($units as $unit)
-                    <option value="{{ $unit->id }}" {{ request('unit_id') == $unit->id ? 'selected' : '' }}>{{ $unit->nama_unit }}</option>
+            <label class="form-label small fw-semibold text-secondary mb-1">Department KERJA</label>
+            <select name="department_id" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Semua Department --</option>
+                @foreach($departments as $Department)
+                    <option value="{{ $Department->id }}" {{ request('department_id') == $Department->id ? 'selected' : '' }}>{{ $Department->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-12 col-md-2">
-            <label class="form-label small fw-semibold text-secondary mb-1">JABATAN</label>
-            <select name="jabatan_id" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Jabatan --</option>
-                @foreach($jabatans as $jabatan)
-                    <option value="{{ $jabatan->id }}" {{ request('jabatan_id') == $jabatan->id ? 'selected' : '' }}>{{ $jabatan->nama_jabatan }}</option>
+            <label class="form-label small fw-semibold text-secondary mb-1">Position</label>
+            <select name="position_id" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Semua Position --</option>
+                @foreach($positions as $Position)
+                    <option value="{{ $Position->id }}" {{ request('position_id') == $Position->id ? 'selected' : '' }}>{{ $Position->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-12 col-md-2 d-flex align-items-end mt-4">
-            @if(request()->hasAny(['search', 'unit_id', 'jabatan_id']))
+            @if(request()->hasAny(['search', 'department_id', 'position_id']))
                 <a href="{{ route('admin.hasil.index', ['periode_id' => $selectedPeriode?->id]) }}" class="btn btn-outline-danger w-100">
                     <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                 </a>
@@ -89,7 +89,7 @@
                     <tr>
                         <th style="width: 70px;">Rank</th>
                         <th>Pegawai ASN</th>
-                        <th>Jabatan & Unit</th>
+                        <th>Position & Department</th>
                         <th class="text-center">Nilai Atasan (50%)</th>
                         <th class="text-center">Nilai Rekan (30%/50%)</th>
                         <th class="text-center">Nilai Bawahan (20%)</th>
@@ -117,8 +117,8 @@
                                 <small class="text-secondary">NIP: {{ $h->user->nip }}</small>
                             </td>
                             <td>
-                                <div>{{ $h->user->jabatan?->nama_jabatan ?? '-' }}</div>
-                                <small class="text-secondary">{{ $h->user->unit?->nama_unit ?? '-' }}</small>
+                                <div>{{ $h->user->Position?->name ?? '-' }}</div>
+                                <small class="text-secondary">{{ $h->user->Department?->name ?? '-' }}</small>
                             </td>
                             <td class="text-center font-monospace">{{ $h->nilai_atasan ?? '-' }}</td>
                             <td class="text-center font-monospace">{{ $h->nilai_rekan ?? '-' }}</td>
@@ -187,3 +187,4 @@
     });
 </script>
 @endpush
+

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePegawaiRequest;
 use App\Http\Requests\Admin\UpdatePegawaiRequest;
-use App\Models\Jabatan;
-use App\Models\Unit;
+use App\Models\Position;
+use App\Models\Department;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,7 +16,7 @@ class PegawaiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with(['jabatan', 'unit', 'atasan']);
+        $query = User::with(['position', 'department', 'atasan', 'roles']);
 
         if (($search = $request->input('search')) !== null && trim($search) !== '') {
             $term = mb_strtolower(trim($search));
@@ -26,39 +27,44 @@ class PegawaiController extends Controller
             });
         }
 
-        if ($unitId = $request->input('unit_id')) {
-            $query->where('unit_id', $unitId);
+        if ($departmentId = $request->input('department_id')) {
+            $query->where('department_id', $departmentId);
         }
 
-        if ($jabatanId = $request->input('jabatan_id')) {
-            $query->where('jabatan_id', $jabatanId);
+        if ($positionId = $request->input('position_id')) {
+            $query->where('position_id', $positionId);
         }
 
         $pegawais = $query->orderBy('name')->paginate(10)->withQueryString();
-        $units = Unit::orderBy('nama_unit')->get();
-        $jabatans = Jabatan::orderBy('id')->get();
+        $departments = Department::orderBy('name')->get();
+        $positions = Position::orderBy('id')->get();
 
-        return view('admin.pegawai.index', compact('pegawais', 'units', 'jabatans'));
+        return view('admin.pegawai.index', compact('pegawais', 'departments', 'positions'));
     }
 
     public function create()
     {
-        $jabatans = Jabatan::orderBy('id')->get();
-        $units = Unit::orderBy('nama_unit')->get();
-        // Atasan potential is Ketua Umum or Kabid
-        $atasans = User::whereHas('jabatan', function ($q) {
-            $q->whereIn('level', ['ketua_umum', 'kabid']);
+        $positions = Position::orderBy('id')->get();
+        $departments = Department::orderBy('name')->get();
+        $roles = Role::orderBy('name')->get();
+        // Atasan potential is generally position level 1 to 5
+        $atasans = User::whereHas('position', function ($q) {
+            $q->whereIn('level', [1, 2, 3, 4, 5]);
         })->orderBy('name')->get();
 
-        return view('admin.pegawai.create', compact('jabatans', 'units', 'atasans'));
+        return view('admin.pegawai.create', compact('positions', 'departments', 'atasans', 'roles'));
     }
 
     public function store(StorePegawaiRequest $request)
     {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
+        
+        $role = $data['role'];
+        unset($data['role']);
 
-        User::create($data);
+        $user = User::create($data);
+        $user->assignRole($role);
 
         return redirect()->route('admin.pegawai.index')
             ->with('success', 'Data Pegawai berhasil ditambahkan.');
@@ -66,21 +72,22 @@ class PegawaiController extends Controller
 
     public function show(User $pegawai)
     {
-        $pegawai->load(['jabatan', 'unit', 'atasan', 'bawahan']);
+        $pegawai->load(['position', 'department', 'atasan', 'bawahan', 'roles']);
 
         return view('admin.pegawai.show', compact('pegawai'));
     }
 
     public function edit(User $pegawai)
     {
-        $jabatans = Jabatan::orderBy('id')->get();
-        $units = Unit::orderBy('nama_unit')->get();
+        $positions = Position::orderBy('id')->get();
+        $departments = Department::orderBy('name')->get();
+        $roles = Role::orderBy('name')->get();
         $atasans = User::where('id', '!=', $pegawai->id)
-            ->whereHas('jabatan', function ($q) {
-                $q->whereIn('level', ['ketua_umum', 'kabid']);
+            ->whereHas('position', function ($q) {
+                $q->whereIn('level', [1, 2, 3, 4, 5]);
             })->orderBy('name')->get();
 
-        return view('admin.pegawai.edit', compact('pegawai', 'jabatans', 'units', 'atasans'));
+        return view('admin.pegawai.edit', compact('pegawai', 'positions', 'departments', 'atasans', 'roles'));
     }
 
     public function update(UpdatePegawaiRequest $request, User $pegawai)
@@ -93,7 +100,11 @@ class PegawaiController extends Controller
             $data['password'] = Hash::make($data['password']);
         }
 
+        $role = $data['role'];
+        unset($data['role']);
+
         $pegawai->update($data);
+        $pegawai->syncRoles([$role]);
 
         return redirect()->route('admin.pegawai.index')
             ->with('success', 'Data Pegawai berhasil diperbarui.');

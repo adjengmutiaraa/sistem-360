@@ -9,7 +9,7 @@ class UpdatePegawaiRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->role === 'admin';
+        return $this->user()?->hasAnyRole(['Super Admin', 'Admin BKPSDM']);
     }
 
     public function rules(): array
@@ -31,11 +31,13 @@ class UpdatePegawaiRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($userId),
             ],
             'password' => ['nullable', 'string', 'min:6'],
-            'role' => ['required', 'string', 'in:admin,pegawai'],
-            'jabatan_id' => ['nullable', 'exists:jabatans,id'],
-            'unit_id' => ['nullable', 'exists:units,id'],
+            'role' => ['required', 'string', 'exists:roles,name'],
+            'position_id' => ['nullable', 'exists:positions,id'],
+            'department_id' => ['nullable', 'exists:departments,id'],
             'atasan_id' => ['nullable', 'exists:users,id'],
             'telepon' => ['nullable', 'string', 'max:20'],
         ];
     }
 }
+
+

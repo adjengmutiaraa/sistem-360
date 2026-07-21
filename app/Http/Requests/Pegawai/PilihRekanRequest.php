@@ -11,7 +11,7 @@ class PilihRekanRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->role === 'pegawai';
+        return $this->user()?->hasRole('Pegawai');
     }
 
     public function rules(): array
@@ -59,3 +59,4 @@ class PilihRekanRequest extends FormRequest
         });
     }
 }
+

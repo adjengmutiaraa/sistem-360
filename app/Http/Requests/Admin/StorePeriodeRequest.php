@@ -9,7 +9,7 @@ class StorePeriodeRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->role === 'admin';
+        return $this->user()?->hasAnyRole(['Super Admin', 'Admin BKPSDM']);
     }
 
     public function rules(): array
@@ -36,3 +36,4 @@ class StorePeriodeRequest extends FormRequest
         });
     }
 }
+

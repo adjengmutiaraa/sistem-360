@@ -64,43 +64,45 @@
             <!-- Role -->
             <div class="col-12 col-md-4">
                 <label class="form-label small fw-semibold text-secondary">ROLE SISTEM <span class="text-danger">*</span></label>
-                <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-                    <option value="pegawai" {{ old('role') == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
-                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+                    <option value="">-- Pilih Role --</option>
+                    @foreach($roles as $r)
+                        <option value="{{ $r->name }}" {{ old('role') == $r->name ? 'selected' : '' }}>{{ $r->name }}</option>
+                    @endforeach
                 </select>
                 @error('role')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- Jabatan -->
+            <!-- Position -->
             <div class="col-12 col-md-4">
-                <label class="form-label small fw-semibold text-secondary">JABATAN</label>
-                <select name="jabatan_id" class="form-select @error('jabatan_id') is-invalid @enderror">
-                    <option value="">-- Pilih Jabatan --</option>
-                    @foreach($jabatans as $jabatan)
-                        <option value="{{ $jabatan->id }}" {{ old('jabatan_id') == $jabatan->id ? 'selected' : '' }}>
-                            {{ $jabatan->nama_jabatan }} ({{ strtoupper($jabatan->level) }})
+                <label class="form-label small fw-semibold text-secondary">Position</label>
+                <select name="position_id" class="form-select @error('position_id') is-invalid @enderror">
+                    <option value="">-- Pilih Position --</option>
+                    @foreach($positions as $Position)
+                        <option value="{{ $Position->id }}" {{ old('position_id') == $Position->id ? 'selected' : '' }}>
+                            {{ $Position->name }} ({{ strtoupper($Position->level) }})
                         </option>
                     @endforeach
                 </select>
-                @error('jabatan_id')
+                @error('position_id')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
-            <!-- Unit Kerja -->
+            <!-- Department Kerja -->
             <div class="col-12 col-md-4">
-                <label class="form-label small fw-semibold text-secondary">UNIT KERJA</label>
-                <select name="unit_id" class="form-select @error('unit_id') is-invalid @enderror">
-                    <option value="">-- Pilih Unit Kerja --</option>
-                    @foreach($units as $unit)
-                        <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
-                            {{ $unit->nama_unit }}
+                <label class="form-label small fw-semibold text-secondary">Department KERJA</label>
+                <select name="department_id" class="form-select @error('department_id') is-invalid @enderror">
+                    <option value="">-- Pilih Department Kerja --</option>
+                    @foreach($departments as $Department)
+                        <option value="{{ $Department->id }}" {{ old('department_id') == $Department->id ? 'selected' : '' }}>
+                            {{ $Department->name }}
                         </option>
                     @endforeach
                 </select>
-                @error('unit_id')
+                @error('department_id')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
@@ -112,7 +114,7 @@
                     <option value="">-- Tanpa Atasan (Ketua Umum / Top Level) --</option>
                     @foreach($atasans as $atasan)
                         <option value="{{ $atasan->id }}" {{ old('atasan_id') == $atasan->id ? 'selected' : '' }}>
-                            {{ $atasan->name }} ({{ $atasan->jabatan?->nama_jabatan ?? 'Pegawai' }})
+                            {{ $atasan->name }} ({{ $atasan->Position?->name ?? 'Pegawai' }})
                         </option>
                     @endforeach
                 </select>
@@ -138,3 +140,5 @@
     </form>
 </div>
 @endsection
+
+

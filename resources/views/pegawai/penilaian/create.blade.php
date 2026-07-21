@@ -75,7 +75,7 @@
                     <span class="badge bg-warning text-dark px-3 py-1 rounded-pill">Bawahan</span>
                 @endif
             </div>
-            <small class="text-secondary">NIP: {{ $dinilai->nip }} | {{ $dinilai->jabatan?->nama_jabatan }} - {{ $dinilai->unit?->nama_unit }}</small>
+            <small class="text-secondary">NIP: {{ $dinilai->nip }} | {{ $dinilai->position?->nama_jabatan }} - {{ $dinilai->department?->nama_unit }}</small>
         </div>
     </div>
 </div>
@@ -138,3 +138,4 @@
     </div>
 </form>
 @endsection
+

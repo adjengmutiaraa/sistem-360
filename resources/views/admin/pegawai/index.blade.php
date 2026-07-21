@@ -31,23 +31,23 @@
             </div>
         </div>
         <div class="col-12 col-md-3">
-            <select name="unit_id" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Unit Kerja --</option>
-                @foreach($units as $unit)
-                    <option value="{{ $unit->id }}" {{ request('unit_id') == $unit->id ? 'selected' : '' }}>{{ $unit->nama_unit }}</option>
+            <select name="department_id" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Semua Department Kerja --</option>
+                @foreach($departments as $Department)
+                    <option value="{{ $Department->id }}" {{ request('department_id') == $Department->id ? 'selected' : '' }}>{{ $Department->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-12 col-md-3">
-            <select name="jabatan_id" class="form-select" onchange="this.form.submit()">
-                <option value="">-- Semua Jabatan --</option>
-                @foreach($jabatans as $jabatan)
-                    <option value="{{ $jabatan->id }}" {{ request('jabatan_id') == $jabatan->id ? 'selected' : '' }}>{{ $jabatan->nama_jabatan }}</option>
+            <select name="position_id" class="form-select" onchange="this.form.submit()">
+                <option value="">-- Semua Position --</option>
+                @foreach($positions as $Position)
+                    <option value="{{ $Position->id }}" {{ request('position_id') == $Position->id ? 'selected' : '' }}>{{ $Position->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-12 col-md-2">
-            @if(request()->hasAny(['search', 'unit_id', 'jabatan_id']))
+            @if(request()->hasAny(['search', 'department_id', 'position_id']))
                 <a href="{{ route('admin.pegawai.index') }}" class="btn btn-outline-danger w-100">
                     <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                 </a>
@@ -69,8 +69,8 @@
                     <th style="width: 40px;">No</th>
                     <th>NIP & Nama Pegawai</th>
                     <th>Role</th>
-                    <th>Jabatan</th>
-                    <th>Unit Kerja</th>
+                    <th>Position</th>
+                    <th>Department Kerja</th>
                     <th>Atasan Langsung</th>
                     <th style="width: 150px;" class="text-center">Aksi</th>
                 </tr>
@@ -91,20 +91,20 @@
                             </div>
                         </td>
                         <td>
-                            @if($pegawai->role === 'admin')
+                            @if($pegawai\->hasAnyRole(['Super Admin', 'Admin BKPSDM']))
                                 <span class="badge bg-danger px-2 py-1">ADMIN</span>
                             @else
                                 <span class="badge bg-secondary px-2 py-1">PEGAWAI</span>
                             @endif
                         </td>
                         <td>
-                            @if($pegawai->jabatan)
-                                <span class="fw-medium text-dark">{{ $pegawai->jabatan->nama_jabatan }}</span>
+                            @if($pegawai->Position)
+                                <span class="fw-medium text-dark">{{ $pegawai->Position->name }}</span>
                             @else
                                 <span class="text-muted small">-</span>
                             @endif
                         </td>
-                        <td>{{ $pegawai->unit?->nama_unit ?? '-' }}</td>
+                        <td>{{ $pegawai->Department?->name ?? '-' }}</td>
                         <td>
                             @if($pegawai->atasan)
                                 <small class="fw-semibold text-primary"><i class="bi bi-person-up me-1"></i>{{ $pegawai->atasan->name }}</small>
@@ -183,3 +183,4 @@
     });
 </script>
 @endpush
+

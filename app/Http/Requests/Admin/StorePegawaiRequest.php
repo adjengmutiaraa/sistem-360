@@ -8,7 +8,7 @@ class StorePegawaiRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->role === 'admin';
+        return $this->user()?->hasAnyRole(['Super Admin', 'Admin BKPSDM']);
     }
 
     public function rules(): array
@@ -18,11 +18,13 @@ class StorePegawaiRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6'],
-            'role' => ['required', 'string', 'in:admin,pegawai'],
-            'jabatan_id' => ['nullable', 'exists:jabatans,id'],
-            'unit_id' => ['nullable', 'exists:units,id'],
+            'role' => ['required', 'string', 'exists:roles,name'],
+            'position_id' => ['nullable', 'exists:positions,id'],
+            'department_id' => ['nullable', 'exists:departments,id'],
             'atasan_id' => ['nullable', 'exists:users,id'],
             'telepon' => ['nullable', 'string', 'max:20'],
         ];
     }
 }
+
+

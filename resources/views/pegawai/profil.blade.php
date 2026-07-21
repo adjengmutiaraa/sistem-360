@@ -26,7 +26,7 @@
             <p class="text-secondary small mb-2">NIP: {{ $user->nip ?? '-' }}</p>
             <div>
                 <span class="badge bg-primary px-3 py-1 rounded-pill">
-                    {{ $user->jabatan?->nama_jabatan ?? 'Pegawai ASN' }}
+                    {{ $user->position?->nama_jabatan ?? 'Pegawai ASN' }}
                 </span>
             </div>
         </div>
@@ -54,17 +54,17 @@
                     <span class="fw-bold">{{ $user->telepon ?? '-' }}</span>
                 </div>
                 <div class="col-sm-6">
-                    <small class="text-secondary d-block">Jabatan</small>
-                    <span class="fw-bold text-primary">{{ $user->jabatan?->nama_jabatan ?? '-' }}</span>
+                    <small class="text-secondary d-block">position</small>
+                    <span class="fw-bold text-primary">{{ $user->position?->nama_jabatan ?? '-' }}</span>
                 </div>
                 <div class="col-sm-6">
-                    <small class="text-secondary d-block">Unit Kerja</small>
-                    <span class="fw-bold">{{ $user->unit?->nama_unit ?? '-' }}</span>
+                    <small class="text-secondary d-block">department Kerja</small>
+                    <span class="fw-bold">{{ $user->department?->nama_unit ?? '-' }}</span>
                 </div>
                 <div class="col-sm-12 border-top pt-2">
                     <small class="text-secondary d-block">Atasan Langsung</small>
                     @if($user->atasan)
-                        <span class="fw-bold text-primary"><i class="bi bi-person-up me-1"></i>{{ $user->atasan->name }} ({{ $user->atasan->jabatan?->nama_jabatan }})</span>
+                        <span class="fw-bold text-primary"><i class="bi bi-person-up me-1"></i>{{ $user->atasan->name }} ({{ $user->atasan->position?->nama_jabatan }})</span>
                     @else
                         <span class="text-muted">Tidak Ada (Ketua Umum / Top Level)</span>
                     @endif
@@ -74,3 +74,4 @@
     </div>
 </div>
 @endsection
+

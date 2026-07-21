@@ -35,7 +35,7 @@
             <p class="text-secondary small mb-2">NIP: {{ $pegawai->nip ?? '-' }}</p>
             <div>
                 <span class="badge bg-primary px-3 py-1 rounded-pill">
-                    {{ $pegawai->jabatan?->nama_jabatan ?? 'Belum ada jabatan' }}
+                    {{ $pegawai->Position?->name ?? 'Belum ada Position' }}
                 </span>
             </div>
         </div>
@@ -48,15 +48,15 @@
             <div class="row g-3">
                 <div class="col-sm-6">
                     <small class="text-secondary d-block">Role Sistem</small>
-                    <span class="fw-bold text-uppercase">{{ $pegawai->role }}</span>
+                    <span class="fw-bold text-uppercase">{{ $pegawai\->roles->pluck('name')->implode(', ') }}</span>
                 </div>
                 <div class="col-sm-6">
                     <small class="text-secondary d-block">Email</small>
                     <span class="fw-bold">{{ $pegawai->email }}</span>
                 </div>
                 <div class="col-sm-6">
-                    <small class="text-secondary d-block">Unit Kerja</small>
-                    <span class="fw-bold">{{ $pegawai->unit?->nama_unit ?? '-' }}</span>
+                    <small class="text-secondary d-block">Department Kerja</small>
+                    <span class="fw-bold">{{ $pegawai->Department?->name ?? '-' }}</span>
                 </div>
                 <div class="col-sm-6">
                     <small class="text-secondary d-block">No Telepon</small>
@@ -80,7 +80,7 @@
                         <div class="list-group-item d-flex justify-content-between align-items-center px-0">
                             <div>
                                 <div class="fw-semibold">{{ $bawahan->name }}</div>
-                                <small class="text-secondary">NIP: {{ $bawahan->nip }} | {{ $bawahan->jabatan?->nama_jabatan }}</small>
+                                <small class="text-secondary">NIP: {{ $bawahan->nip }} | {{ $bawahan->Position?->name }}</small>
                             </div>
                             <a href="{{ route('admin.pegawai.show', $bawahan) }}" class="btn btn-sm btn-outline-primary">Detail</a>
                         </div>
@@ -93,3 +93,4 @@
     </div>
 </div>
 @endsection
+

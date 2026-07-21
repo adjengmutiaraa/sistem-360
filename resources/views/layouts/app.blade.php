@@ -147,13 +147,13 @@
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('pegawai.dashboard') }}" class="sidebar-brand">
+        <a href="{{ auth()->user()->hasAnyRole(['Super Admin', 'Admin BKPSDM']) ? route('admin.dashboard') : route('pegawai.dashboard') }}" class="sidebar-brand">
             <i class="bi bi-award-fill text-primary me-2 fs-4"></i>
             <span>SI-PK360 ASN</span>
         </a>
 
         <div class="sidebar-menu">
-            @if(auth()->user()->role === 'admin')
+            @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin BKPSDM']))
                 <div class="nav-header">NAVIGASI UTAMA</div>
                 <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="bi bi-grid-1x2-fill"></i>
@@ -228,7 +228,7 @@
                 <div class="text-start d-none d-md-block">
                     <div class="fw-semibold text-dark small leading-tight">{{ auth()->user()->name }}</div>
                     <div class="text-secondary" style="font-size: 0.75rem;">
-                        {{ auth()->user()->role === 'admin' ? 'Administrator' : (auth()->user()->jabatan?->nama_jabatan ?? 'Pegawai') }}
+                        {{ auth()->user()->hasAnyRole(['Super Admin', 'Admin BKPSDM']) ? 'Administrator' : (auth()->user()->position?->name ?? 'Pegawai') }}
                     </div>
                 </div>
             </button>
@@ -291,3 +291,4 @@
     @stack('scripts')
 </body>
 </html>
+

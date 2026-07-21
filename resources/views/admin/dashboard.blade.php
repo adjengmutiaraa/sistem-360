@@ -104,6 +104,44 @@
     </div>
 </div>
 
+
+<!-- Organizational Structure Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card card-custom p-4">
+            <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-diagram-3-fill text-primary me-2"></i> Struktur Organisasi BKPSDM</h5>
+            <div class="org-chart p-3 bg-light rounded border">
+                @if(isset($orgStructure) && count($orgStructure) > 0)
+                    <ul class="list-unstyled mb-0 org-tree">
+                        @foreach($orgStructure as $root)
+                            <li>
+                                <div class="fw-bold text-dark"><i class="bi bi-building me-2 text-primary"></i>{{ $root->name }}</div>
+                                @if($root->children->count() > 0)
+                                    <ul class="list-unstyled ms-4 mt-2 border-start border-2 border-primary ps-3">
+                                        @foreach($root->children as $child)
+                                            <li class="mb-2">
+                                                <div class="fw-semibold text-secondary"><i class="bi bi-diagram-2 me-2"></i>{{ $child->name }}</div>
+                                                @if($child->children->count() > 0)
+                                                    <ul class="list-unstyled ms-4 mt-1 border-start border-2 border-info ps-3">
+                                                        @foreach($child->children as $subchild)
+                                                            <li class="text-muted small py-1"><i class="bi bi-dash me-1"></i>{{ $subchild->name }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="text-muted mb-0">Struktur organisasi belum dikonfigurasi.</p>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Top 5 Ranking Section -->
 @if(isset($top5Hasils) && $top5Hasils->count() > 0)
     <div class="card card-custom p-4">
@@ -119,7 +157,7 @@
                     <tr>
                         <th style="width: 60px;" class="text-center">Rank</th>
                         <th>Pegawai ASN</th>
-                        <th>Jabatan & Unit</th>
+                        <th>Position & Department</th>
                         <th class="text-center">Nilai Akhir 360°</th>
                         <th class="text-center">Predikat</th>
                     </tr>
@@ -139,7 +177,7 @@
                                 @endif
                             </td>
                             <td class="fw-bold text-dark">{{ $h->user->name }}</td>
-                            <td>{{ $h->user->jabatan?->nama_jabatan }} ({{ $h->user->unit?->nama_unit ?? '-' }})</td>
+                            <td>{{ $h->user->Position?->name }} ({{ $h->user->Department?->name ?? '-' }})</td>
                             <td class="text-center fw-bold text-primary fs-6">{{ number_format($h->nilai_akhir, 2) }}</td>
                             <td class="text-center">
                                 <span class="badge bg-success px-3 py-1 rounded-pill">{{ $h->kategori }}</span>
@@ -152,3 +190,5 @@
     </div>
 @endif
 @endsection
+
+

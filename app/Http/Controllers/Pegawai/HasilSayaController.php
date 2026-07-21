@@ -13,8 +13,8 @@ class HasilSayaController extends Controller
 {
     public function index(Request $request, \App\Services\KalkulasiNilai360Service $service)
     {
-        $user = auth()->user()->load(['jabatan', 'unit']);
-        $isKetuaUmum = $user->jabatan?->level === 'ketua_umum';
+        $user = auth()->user()->load(['position', 'department']);
+        $isKetuaUmum = $user->position?->level === 'ketua_umum';
 
         $periodes = PeriodePenilaian::orderBy('id', 'desc')->get();
 
@@ -65,3 +65,4 @@ class HasilSayaController extends Controller
         ));
     }
 }
+

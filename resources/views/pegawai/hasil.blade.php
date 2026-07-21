@@ -89,11 +89,11 @@
                         <span class="badge bg-light text-secondary border mt-1">{{ $countAtasan }} Penilai Atasan</span>
                     </div>
                     <div class="col-4">
-                        <small class="text-secondary d-block">Nilai Rekan ({{ $user->jabatan?->level === 'staff' ? '50%' : '30%' }})</small>
+                        <small class="text-secondary d-block">Nilai Rekan ({{ $user->position?->level === 'staff' ? '50%' : '30%' }})</small>
                         <h3 class="fw-bold text-dark mt-2 mb-0">{{ $hasil->nilai_rekan ?? '-' }}</h3>
                         <span class="badge bg-light text-secondary border mt-1">{{ $countRekan }} Penilai Rekan</span>
                     </div>
-                    @if($user->jabatan?->level !== 'staff')
+                    @if($user->position?->level !== 'staff')
                         <div class="col-4">
                             <small class="text-secondary d-block">Nilai Bawahan (20%)</small>
                             <h3 class="fw-bold text-dark mt-2 mb-0">{{ $hasil->nilai_bawahan ?? '-' }}</h3>
@@ -121,3 +121,4 @@
     </div>
 @endif
 @endsection
+

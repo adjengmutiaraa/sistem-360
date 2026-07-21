@@ -8,16 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('jabatans', function (Blueprint $table) {
+        Schema::create('positions', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_jabatan');
-            $table->enum('level', ['ketua_umum', 'kabid', 'staff']);
+            $table->string('name');
+            $table->string('level')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('jabatans');
+        Schema::dropIfExists('positions');
     }
 };

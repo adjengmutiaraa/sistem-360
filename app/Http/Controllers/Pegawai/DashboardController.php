@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = auth()->user()->load(['jabatan', 'unit', 'atasan']);
+        $user = auth()->user()->load(['position', 'department', 'atasan']);
         $periodeAktif = PeriodePenilaian::getPeriodeAktif();
 
         $penugasan = collect();
@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $needsPilihRekan = false;
 
         if ($periodeAktif) {
-            $penugasan = PenugasanPenilaian::with(['dinilai.jabatan', 'dinilai.unit'])
+            $penugasan = PenugasanPenilaian::with(['dinilai.position', 'dinilai.department'])
                 ->where('periode_penilaian_id', $periodeAktif->id)
                 ->where('penilai_id', $user->id)
                 ->get();
@@ -29,7 +29,7 @@ class DashboardController extends Controller
             $totalSelesai = $penugasan->where('status', 'selesai')->count();
             $progress = $totalWajib > 0 ? round(($totalSelesai / $totalWajib) * 100, 1) : 0;
 
-            if ($user->jabatan?->level === 'staff' && $penugasan->where('jenis_penilai', 'rekan')->count() < 3) {
+            if ($user->position?->level >= 4 && $penugasan->where('jenis_penilai', 'rekan')->count() < 3) {
                 $needsPilihRekan = true;
             }
         }
@@ -45,3 +45,4 @@ class DashboardController extends Controller
         ));
     }
 }
+

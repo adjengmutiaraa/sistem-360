@@ -75,12 +75,12 @@
         <tr>
             <td style="font-weight: bold;">NIP</td>
             <td>: {{ $user->nip }}</td>
-            <td style="font-weight: bold;">JABATAN</td>
-            <td>: {{ $user->jabatan?->nama_jabatan ?? '-' }}</td>
+            <td style="font-weight: bold;">Position</td>
+            <td>: {{ $user->Position?->name ?? '-' }}</td>
         </tr>
         <tr>
-            <td style="font-weight: bold;">UNIT KERJA</td>
-            <td>: {{ $user->unit?->nama_unit ?? '-' }}</td>
+            <td style="font-weight: bold;">Department KERJA</td>
+            <td>: {{ $user->Department?->name ?? '-' }}</td>
             <td style="font-weight: bold;">STATUS PERIODE</td>
             <td>: {{ strtoupper($periode->status) }}</td>
         </tr>
@@ -109,10 +109,10 @@
             </tr>
             <tr>
                 <td>Nilai Rekan Kerja (Peers)</td>
-                <td>{{ $user->jabatan?->level === 'staff' ? '50%' : '30%' }}</td>
+                <td>{{ $user->Position?->level === 'staff' ? '50%' : '30%' }}</td>
                 <td>{{ $hasil->nilai_rekan ?? '-' }}</td>
             </tr>
-            @if($user->jabatan?->level !== 'staff')
+            @if($user->Position?->level !== 'staff')
                 <tr>
                     <td>Nilai Bawahan</td>
                     <td>20%</td>
@@ -139,3 +139,4 @@
     </div>
 </body>
 </html>
+

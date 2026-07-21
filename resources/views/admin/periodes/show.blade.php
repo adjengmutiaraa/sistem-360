@@ -119,11 +119,11 @@
                         <td>{{ $penugasantable->firstItem() + $index }}</td>
                         <td>
                             <div class="fw-semibold">{{ $tugas->penilai->name }}</div>
-                            <small class="text-secondary">{{ $tugas->penilai->jabatan?->nama_jabatan ?? 'Pegawai' }}</small>
+                            <small class="text-secondary">{{ $tugas->penilai->Position?->name ?? 'Pegawai' }}</small>
                         </td>
                         <td>
                             <div class="fw-semibold text-primary">{{ $tugas->dinilai->name }}</div>
-                            <small class="text-secondary">{{ $tugas->dinilai->jabatan?->nama_jabatan ?? 'Pegawai' }}</small>
+                            <small class="text-secondary">{{ $tugas->dinilai->Position?->name ?? 'Pegawai' }}</small>
                         </td>
                         <td>
                             @if($tugas->jenis_penilai === 'atasan')
@@ -182,3 +182,4 @@
     });
 </script>
 @endpush
+

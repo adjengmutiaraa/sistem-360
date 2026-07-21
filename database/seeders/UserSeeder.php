@@ -10,160 +10,237 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Admin
-        User::updateOrCreate(
-            ['email' => 'admin@sistem360.go.id'],
+        // 1. Super Admin
+        $superadmin = User::firstOrCreate(
+            ['email' => 'superadmin@bkpsdm.go.id'],
+            [
+                'nip' => '199001012020011000',
+                'name' => 'Super Administrator',
+                'password' => Hash::make('password'),
+                'department_id' => null,
+                'position_id' => null,
+                'atasan_id' => null,
+            ]
+        );
+        $superadmin->assignRole('Super Admin');
+
+        // 2. Admin BKPSDM
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@bkpsdm.go.id'],
             [
                 'nip' => '199001012020011001',
-                'name' => 'Administrator Sistem',
-                'email' => 'admin@sistem360.go.id',
+                'name' => 'Administrator BKPSDM',
                 'password' => Hash::make('password'),
-                'role' => 'admin',
-                'jabatan_id' => null,
-                'unit_id' => null,
+                'department_id' => null,
+                'position_id' => null,
                 'atasan_id' => null,
-                'telepon' => '081234567890',
             ]
         );
+        $admin->assignRole('Admin BKPSDM');
 
-        // 2. Ketua Umum
-        $ketua = User::updateOrCreate(
-            ['email' => 'ketua@sistem360.go.id'],
+        // 3. Kepala Badan
+        $kaban = User::firstOrCreate(
+            ['email' => 'kaban@bkpsdm.go.id'],
             [
                 'nip' => '197001011995031001',
-                'name' => 'Dr. H. Ahmad Fauzi, M.Si.',
-                'email' => 'ketua@sistem360.go.id',
+                'name' => 'Kepala Badan',
                 'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 1, // Ketua Umum
-                'unit_id' => 1,    // Sekretariat
+                'department_id' => 1, // Kepala Badan
+                'position_id' => 1, // Kepala Badan
                 'atasan_id' => null,
-                'telepon' => '081234567891',
             ]
         );
+        $kaban->assignRole('Kepala Badan');
 
-        // 3. Kepala Bidang (Kabid 1, 2, 3)
-        $kabid1 = User::updateOrCreate(
-            ['email' => 'kabid1@sistem360.go.id'],
+        // 4. Sekretaris
+        $sekretaris = User::firstOrCreate(
+            ['email' => 'sekretaris@bkpsdm.go.id'],
             [
-                'nip' => '198002022005011001',
-                'name' => 'Budi Santoso, S.T., M.T.',
-                'email' => 'kabid1@sistem360.go.id',
+                'nip' => '197501011998031002',
+                'name' => 'Sekretaris Badan',
                 'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 2, // Kabid
-                'unit_id' => 2,    // Perencanaan
-                'atasan_id' => $ketua->id,
-                'telepon' => '081234567892',
+                'department_id' => 2, // Sekretariat
+                'position_id' => 2, // Sekretaris
+                'atasan_id' => $kaban->id,
             ]
         );
+        $sekretaris->assignRole('Sekretaris');
 
-        $kabid2 = User::updateOrCreate(
-            ['email' => 'kabid2@sistem360.go.id'],
+        // ==========================================
+        // REAL USERS FOR BIDANG PPIK (Department 3)
+        // ==========================================
+        
+        // Kepala Bidang PPIK
+        $hadi = User::firstOrCreate(
+            ['nip' => '197903072005011006'],
             [
-                'nip' => '198103032005011002',
-                'name' => 'Siti Aminah, S.E., M.M.',
-                'email' => 'kabid2@sistem360.go.id',
+                'name' => 'HADI SISWANTO, S.Kom',
+                'email' => 'hadisiswanto@bkpsdm.go.id',
                 'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 2, // Kabid
-                'unit_id' => 3,    // Kepegawaian
-                'atasan_id' => $ketua->id,
-                'telepon' => '081234567893',
+                'department_id' => 3, // Bidang PPIK
+                'position_id' => 12, // Kepala Bidang Pengadaan, Pemberhentian dan Informasi Kepegawaian
+                'atasan_id' => $kaban->id,
+                'telepon' => '08122669319',
             ]
         );
+        $hadi->assignRole('Kepala Bidang');
+        
+        $staff1 = User::firstOrCreate(
+            ['nip' => '198104192009011005'],
+            [
+                'name' => 'FENDI HERIAWAN, S.Kom',
+                'email' => 'fendiheriawan@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 13, // Pranata Komputer Ahli Pertama
+                'atasan_id' => $hadi->id,
+                'telepon' => '085727886346',
+            ]
+        );
+        $staff1->assignRole('ASN');
+        
+        $staff2 = User::firstOrCreate(
+            ['nip' => '196810151992031007'],
+            [
+                'name' => 'MASKURI',
+                'email' => 'maskuri@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 14, // Pengadministrasi Perkantoran
+                'atasan_id' => $hadi->id,
+                'telepon' => '085711521652',
+            ]
+        );
+        $staff2->assignRole('ASN');
+        
+        $staff3 = User::firstOrCreate(
+            ['nip' => '197709192008012008'],
+            [
+                'name' => 'DIAN FITRIANA, S.H.',
+                'email' => 'dianfitriana@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 15, // Penelaah Teknis Kebijakan
+                'atasan_id' => $hadi->id,
+                'telepon' => '087711709098',
+            ]
+        );
+        $staff3->assignRole('ASN');
+        
+        $staff4 = User::firstOrCreate(
+            ['nip' => '198407302009031003'],
+            [
+                'name' => 'APIT SETIAWAN, S.Kom.',
+                'email' => 'apitsetiawan@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 16, // Pranata Komputer Ahli Muda
+                'atasan_id' => $hadi->id,
+                'telepon' => '089644701421',
+            ]
+        );
+        $staff4->assignRole('ASN');
+        
+        $staff5 = User::firstOrCreate(
+            ['nip' => '197508062007011012'],
+            [
+                'name' => 'MOHAMAD TARMANTO',
+                'email' => 'mohamadtarmanto@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 14, // Pengadministrasi Perkantoran
+                'atasan_id' => $hadi->id,
+                'telepon' => '081914109274',
+            ]
+        );
+        $staff5->assignRole('ASN');
+        
+        $staff6 = User::firstOrCreate(
+            ['nip' => '197106071992031005'],
+            [
+                'name' => 'ABDUL WAHID ZUHRY, S.IP, M.M.',
+                'email' => 'abdulwahidzuhry@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 17, // Analis Sumber Daya Manusia Aparatur Ahli Muda
+                'atasan_id' => $hadi->id,
+                'telepon' => '082330224702',
+            ]
+        );
+        $staff6->assignRole('ASN');
+        
+        $staff7 = User::firstOrCreate(
+            ['nip' => '198609022015022001'],
+            [
+                'name' => 'RIZKI SEPTINA KUSUMANINGSIH, S.T.',
+                'email' => 'rizkiseptina@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 18, // Pranata Komputer Mahir/Pelaksana Lanjutan
+                'atasan_id' => $hadi->id,
+                'telepon' => '085226792535',
+            ]
+        );
+        $staff7->assignRole('ASN');
+        
+        $staff8 = User::firstOrCreate(
+            ['nip' => '198208282014061003'],
+            [
+                'name' => 'TUSMANTO',
+                'email' => 'tusmanto@bkpsdm.go.id',
+                'password' => Hash::make('password'),
+                'department_id' => 3,
+                'position_id' => 14, // Pengadministrasi Perkantoran
+                'atasan_id' => $hadi->id,
+                'telepon' => '081389398313',
+            ]
+        );
+        $staff8->assignRole('ASN');
 
-        $kabid3 = User::updateOrCreate(
-            ['email' => 'kabid3@sistem360.go.id'],
-            [
-                'nip' => '198204042005011003',
-                'name' => 'Dedi Wijaya, S.Kom., M.Kom.',
-                'email' => 'kabid3@sistem360.go.id',
-                'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 2, // Kabid
-                'unit_id' => 4,    // TI
-                'atasan_id' => $ketua->id,
-                'telepon' => '081234567894',
-            ]
-        );
+        // ==========================================
+        // OTHER KABIDS
+        // ==========================================
 
-        // 4. Staff Bidang Perencanaan (Bawahan Kabid 1)
-        User::updateOrCreate(
-            ['email' => 'staff1@sistem360.go.id'],
+        // Kepala Bidang Mutasi dan Promosi
+        $kabid2 = User::firstOrCreate(
+            ['email' => 'kabid.mutasi@bkpsdm.go.id'],
             [
-                'nip' => '199205052018011001',
-                'name' => 'Eko Prasetyo, S.Kom.',
-                'email' => 'staff1@sistem360.go.id',
+                'nip' => '198101012006031004',
+                'name' => 'Kepala Bidang Mutasi dan Promosi',
                 'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 3, // Staff
-                'unit_id' => 2,    // Perencanaan
-                'atasan_id' => $kabid1->id,
-                'telepon' => '081234567895',
+                'department_id' => 4,
+                'position_id' => 3,
+                'atasan_id' => $kaban->id,
             ]
         );
+        $kabid2->assignRole('Kepala Bidang');
 
-        User::updateOrCreate(
-            ['email' => 'staff2@sistem360.go.id'],
+        // Kepala Bidang Penilaian dan Evaluasi
+        $kabid3 = User::firstOrCreate(
+            ['email' => 'kabid.evaluasi@bkpsdm.go.id'],
             [
-                'nip' => '199306062018011002',
-                'name' => 'Fitriani, S.E.',
-                'email' => 'staff2@sistem360.go.id',
+                'nip' => '198201012007031005',
+                'name' => 'Kepala Bidang Penilaian dan Evaluasi',
                 'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 3, // Staff
-                'unit_id' => 2,    // Perencanaan
-                'atasan_id' => $kabid1->id,
-                'telepon' => '081234567896',
+                'department_id' => 5,
+                'position_id' => 3,
+                'atasan_id' => $kaban->id,
             ]
         );
+        $kabid3->assignRole('Kepala Bidang');
 
-        User::updateOrCreate(
-            ['email' => 'staff3@sistem360.go.id'],
+        // Kepala Bidang Pengembangan SDM
+        $kabid4 = User::firstOrCreate(
+            ['email' => 'kabid.psdm@bkpsdm.go.id'],
             [
-                'nip' => '199407072018011003',
-                'name' => 'Gita Gutawa, S.T.',
-                'email' => 'staff3@sistem360.go.id',
+                'nip' => '198301012008031006',
+                'name' => 'Kepala Bidang Pengembangan SDM',
                 'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 3, // Staff
-                'unit_id' => 2,    // Perencanaan
-                'atasan_id' => $kabid1->id,
-                'telepon' => '081234567897',
+                'department_id' => 6,
+                'position_id' => 3,
+                'atasan_id' => $kaban->id,
             ]
         );
-
-        // 5. Staff Bidang Kepegawaian (Bawahan Kabid 2)
-        User::updateOrCreate(
-            ['email' => 'staff4@sistem360.go.id'],
-            [
-                'nip' => '199508082018011004',
-                'name' => 'Hendra Setiawan, S.IP.',
-                'email' => 'staff4@sistem360.go.id',
-                'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 3, // Staff
-                'unit_id' => 3,    // Kepegawaian
-                'atasan_id' => $kabid2->id,
-                'telepon' => '081234567898',
-            ]
-        );
-
-        // 6. Staff Bidang TI (Bawahan Kabid 3)
-        User::updateOrCreate(
-            ['email' => 'staff5@sistem360.go.id'],
-            [
-                'nip' => '199609092018011005',
-                'name' => 'Indah Permata, S.Kom.',
-                'email' => 'staff5@sistem360.go.id',
-                'password' => Hash::make('password'),
-                'role' => 'pegawai',
-                'jabatan_id' => 3, // Staff
-                'unit_id' => 4,    // TI
-                'atasan_id' => $kabid3->id,
-                'telepon' => '081234567899',
-            ]
-        );
+        $kabid4->assignRole('Kepala Bidang');
     }
 }

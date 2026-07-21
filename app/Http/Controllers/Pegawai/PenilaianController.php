@@ -29,13 +29,13 @@ class PenilaianController extends Controller
             ]);
         }
 
-        $penugasan = PenugasanPenilaian::with(['dinilai.jabatan', 'dinilai.unit'])
+        $penugasan = PenugasanPenilaian::with(['dinilai.position', 'dinilai.department'])
             ->where('periode_penilaian_id', $periodeAktif->id)
             ->where('penilai_id', $user->id)
             ->get();
 
         // Check if staff user needs to select 3 peer staff members
-        $isStaff = $user->jabatan?->level === 'staff';
+        $isStaff = $user->position?->level >= 4;
         $peerAssignmentsCount = $penugasan->where('jenis_penilai', 'rekan')->count();
         $needsPilihRekan = $isStaff && $peerAssignmentsCount < 3;
 
@@ -66,7 +66,7 @@ class PenilaianController extends Controller
                 ->with('error', 'Tidak ada periode penilaian yang sedang aktif.');
         }
 
-        if ($user->jabatan?->level !== 'staff') {
+        if ($user->position?->level !== 'staff') {
             return redirect()->route('pegawai.penilaian.index')
                 ->with('error', 'Fitur pemilihan rekan staff hanya khusus untuk pegawai berlevel Staff.');
         }
@@ -80,8 +80,8 @@ class PenilaianController extends Controller
 
         // Potential peer staff list (exclude self)
         $availableStaffs = User::where('id', '!=', $user->id)
-            ->whereHas('jabatan', fn ($q) => $q->where('level', 'staff'))
-            ->with(['unit', 'jabatan'])
+            ->whereHas('position', fn ($q) => $q->where('level', 'staff'))
+            ->with(['department', 'position'])
             ->get();
 
         // Annotate each staff whether they already have 3 peer evaluators
@@ -209,8 +209,9 @@ class PenilaianController extends Controller
 
     public function profil()
     {
-        $user = User::with(['jabatan', 'unit', 'atasan', 'bawahan'])->find(auth()->id());
+        $user = User::with(['position', 'department', 'atasan', 'bawahan'])->find(auth()->id());
 
         return view('pegawai.profil', compact('user'));
     }
 }
+

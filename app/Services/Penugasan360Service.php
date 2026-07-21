@@ -16,9 +16,10 @@ class Penugasan360Service
         $countGenerated = 0;
 
         // Fetch Users grouped by level
-        $ketuaUmum = User::whereHas('jabatan', fn ($q) => $q->where('level', 'ketua_umum'))->first();
-        $kabids = User::whereHas('jabatan', fn ($q) => $q->where('level', 'kabid'))->get();
-        $staffs = User::whereHas('jabatan', fn ($q) => $q->where('level', 'staff'))->get();
+        $ketuaUmum = User::whereHas('position', fn ($q) => $q->where('level', '1'))->first();
+        $kabids = User::whereHas('position', fn ($q) => $q->where('level', '3'))->get();
+        // treat levels >= 4 as staff
+        $staffs = User::whereHas('position', fn ($q) => $q->where('level', '>=', '4'))->get();
 
         // 1. KETUA UMUM -> Menilai Semua Kepala Bidang (jenis: 'bawahan')
         if ($ketuaUmum) {
@@ -57,9 +58,9 @@ class Penugasan360Service
 
             // B. Kabid -> Menilai Semua Staff di Divisi / Unit Kerjanya (jenis: 'atasan' for staff)
             $staffsInUnit = User::where('atasan_id', $kabid->id)->get();
-            if ($staffsInUnit->isEmpty() && $kabid->unit_id) {
-                $staffsInUnit = User::where('unit_id', $kabid->unit_id)
-                    ->whereHas('jabatan', fn ($q) => $q->where('level', 'staff'))
+            if ($staffsInUnit->isEmpty() && $kabid->department_id) {
+                $staffsInUnit = User::where('department_id', $kabid->department_id)
+                    ->whereHas('position', fn ($q) => $q->where('level', '>=', '4'))
                     ->get();
             }
 
@@ -98,9 +99,9 @@ class Penugasan360Service
         foreach ($staffs as $staff) {
             // A. Staff -> Menilai Atasan Langsung (Kabid)
             $atasan = $staff->atasan;
-            if (! $atasan && $staff->unit_id) {
-                $atasan = User::where('unit_id', $staff->unit_id)
-                    ->whereHas('jabatan', fn ($q) => $q->where('level', 'kabid'))
+            if (! $atasan && $staff->department_id) {
+                $atasan = User::where('department_id', $staff->department_id)
+                    ->whereHas('position', fn ($q) => $q->where('level', '3'))
                     ->first();
             }
 
@@ -121,10 +122,10 @@ class Penugasan360Service
             // B. Staff -> Menilai 3 Rekan Staff (se-unit atau lintas unit)
             $peerStaffs = $staffs->where('id', '!=', $staff->id);
             // Prefer peers in same unit first
-            if ($staff->unit_id) {
-                $sameUnitPeers = $peerStaffs->where('unit_id', $staff->unit_id)->take(3);
+            if ($staff->department_id) {
+                $sameUnitPeers = $peerStaffs->where('department_id', $staff->department_id)->take(3);
                 if ($sameUnitPeers->count() < 3) {
-                    $otherPeers = $peerStaffs->where('unit_id', '!=', $staff->unit_id)->take(3 - $sameUnitPeers->count());
+                    $otherPeers = $peerStaffs->where('department_id', '!=', $staff->department_id)->take(3 - $sameUnitPeers->count());
                     $assignedPeers = $sameUnitPeers->concat($otherPeers);
                 } else {
                     $assignedPeers = $sameUnitPeers;
