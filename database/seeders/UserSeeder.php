@@ -42,8 +42,8 @@ class UserSeeder extends Seeder
         $kaban = User::firstOrCreate(
             ['email' => 'kaban@bkpsdm.go.id'],
             [
-                'nip' => '197001011995031001',
-                'name' => 'Kepala Badan',
+                'nip' => '196803231990031012',
+                'name' => 'Khaeron, S.H., M.M.',
                 'password' => Hash::make('password'),
                 'department_id' => 1, // Kepala Badan
                 'position_id' => 1, // Kepala Badan
