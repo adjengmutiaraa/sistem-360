@@ -96,7 +96,7 @@
                 <div class="mt-3">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span class="small fw-semibold text-secondary">Progress Pengisian Saya</span>
-                        <span class="fw-bold text-primary">{{ $totalSelesai }} / {{ $totalWajib }} Ditilai ({{ $progress }}%)</span>
+                        <span class="fw-bold text-primary">{{ $totalSelesai }} / {{ $totalWajib }} Dinilai ({{ $progress }}%)</span>
                     </div>
                     <div class="progress" style="height: 10px;">
                         <div class="progress-bar {{ $progress >= 100 ? 'bg-success' : 'bg-primary' }}" style="width: {{ $progress }}%"></div>
